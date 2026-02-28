@@ -16,13 +16,16 @@ export default function ToolForm({ tool, onComplete }: Props) {
     e.preventDefault();
     setLoading(true); setError(''); setDocument(''); setAgentStatus([]);
     try {
-      const token = localStorage.getItem('auth_token');
+      const token = localStorage.getItem('auth_token') ?? 'demo-token-replace-with-real-jwt';
       const res = await fetch(`/api/tools/${tool.id}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
         body: JSON.stringify(inputs),
       });
-      if (!res.ok || !res.body) throw new Error('Request failed');
+      if (!res.ok || !res.body) {
+        const err = await res.json().catch(() => ({ error: 'Request failed' }));
+        throw new Error(err.error ?? 'Request failed');
+      }
       const reader = res.body.getReader();
       const decoder = new TextDecoder();
       while (true) {
@@ -30,15 +33,27 @@ export default function ToolForm({ tool, onComplete }: Props) {
         if (done) break;
         const lines = decoder.decode(value).split('\n').filter(l => l.startsWith('data: '));
         for (const line of lines) {
-          const event = JSON.parse(line.slice(6));
-          if (event.type === 'agent_start') setAgentStatus(prev => [...prev, { name: event.agent.name, emoji: event.agent.emoji, done: false }]);
-          else if (event.type === 'agent_complete') setAgentStatus(prev => prev.map(a => a.name === event.agentName ? { ...a, done: true } : a));
-          else if (event.type === 'complete') { setDocument(event.document); setActiveTab('output'); onComplete(); }
-          else if (event.type === 'error') setError(event.message);
+          try {
+            const event = JSON.parse(line.slice(6));
+            if (event.type === 'agent_start') {
+              setAgentStatus(prev => [...prev, { name: event.agent.name, emoji: event.agent.emoji, done: false }]);
+            } else if (event.type === 'agent_complete') {
+              setAgentStatus(prev => prev.map(a => a.name === event.agentName ? { ...a, done: true } : a));
+            } else if (event.type === 'complete') {
+              setDocument(event.document);
+              setActiveTab('output');
+              onComplete();
+            } else if (event.type === 'error') {
+              setError(event.message);
+            }
+          } catch {}
         }
       }
-    } catch { setError('Something went wrong. Please try again.'); }
-    finally { setLoading(false); }
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const downloadDoc = () => {
@@ -53,7 +68,7 @@ export default function ToolForm({ tool, onComplete }: Props) {
     <div className="animate-fade-in">
       {document && (
         <div className="flex gap-1 mb-6 bg-gray-100 p-1 rounded-xl w-fit">
-          {(['form','output'] as const).map(tab => (
+          {(['form', 'output'] as const).map(tab => (
             <button key={tab} onClick={() => setActiveTab(tab)}
               className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${activeTab === tab ? 'bg-white shadow-sm text-gray-900' : 'text-gray-500 hover:text-gray-700'}`}>
               {tab === 'form' ? '📝 Form' : '📄 Document'}
@@ -92,8 +107,8 @@ export default function ToolForm({ tool, onComplete }: Props) {
             <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Agent Chain</p>
             <div className="flex items-center gap-2 flex-wrap">
               {tool.agentChain.map((agentId, i) => {
-                const emojis: Record<string,string> = { legal:'⚖️', security:'🛡️', product:'🎯', sales:'📊' };
-                const names: Record<string,string> = { legal:'Legal', security:'Security', product:'Product', sales:'Sales' };
+                const emojis: Record<string, string> = { legal: '⚖️', security: '🛡️', product: '🎯', sales: '📊' };
+                const names: Record<string, string> = { legal: 'Legal', security: 'Security', product: 'Product', sales: 'Sales' };
                 return (
                   <div key={agentId} className="flex items-center gap-2">
                     <span className="flex items-center gap-1.5 bg-white border border-violet-200 text-violet-700 text-xs font-medium px-3 py-1.5 rounded-full shadow-sm">
@@ -111,8 +126,8 @@ export default function ToolForm({ tool, onComplete }: Props) {
             {loading ? (
               <span className="flex items-center justify-center gap-2">
                 <svg className="animate-spin h-4 w-4" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                 </svg>
                 Agents Working...
               </span>
@@ -133,8 +148,8 @@ export default function ToolForm({ tool, onComplete }: Props) {
               </div>
               {a.done ? <span className="text-emerald-500 text-lg">✅</span> : (
                 <svg className="animate-spin h-5 w-5 text-blue-500" fill="none" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/>
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                 </svg>
               )}
             </div>

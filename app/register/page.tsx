@@ -13,7 +13,11 @@ export default function RegisterPage() {
     e.preventDefault();
     setLoading(true); setError('');
     try {
-      const res = await fetch('/api/auth', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'register', ...form }) });
+      const res = await fetch('/api/auth', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'register', ...form }),
+      });
       const data = await res.json();
       if (!res.ok) { setError(data.error); return; }
       router.push('/login?registered=true');
@@ -37,19 +41,24 @@ export default function RegisterPage() {
         <div className="bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-8 shadow-2xl">
           <form onSubmit={handleSubmit} className="space-y-5">
             {[
-              { id:'companyName', label:'Company Name', type:'text', placeholder:'TechCorp Inc.' },
-              { id:'email', label:'Work Email', type:'email', placeholder:'you@company.com' },
-              { id:'password', label:'Password', type:'password', placeholder:'••••••••••••' },
+              { id: 'companyName', label: 'Company Name', type: 'text', placeholder: 'TechCorp Inc.' },
+              { id: 'email', label: 'Work Email', type: 'email', placeholder: 'you@company.com' },
+              { id: 'password', label: 'Password', type: 'password', placeholder: '••••••••••••' },
             ].map(field => (
               <div key={field.id}>
                 <label className="block text-sm font-semibold text-gray-300 mb-2">{field.label}</label>
                 <input type={field.type} required placeholder={field.placeholder}
                   className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent transition-all"
-                  value={(form as any)[field.id]} onChange={e => setForm(p => ({ ...p, [field.id]: e.target.value }))} />
+                  value={(form as Record<string, string>)[field.id]}
+                  onChange={e => setForm(p => ({ ...p, [field.id]: e.target.value }))} />
               </div>
             ))}
-            <p className="text-xs text-gray-500">Password must be 12+ chars with uppercase, lowercase, number & symbol</p>
-            {error && <div className="p-3 bg-rose-500/10 border border-rose-500/20 rounded-xl"><span className="text-rose-400 text-sm">⚠️ {error}</span></div>}
+            <p className="text-xs text-gray-500">Password must be 12+ chars with uppercase, lowercase, number &amp; symbol</p>
+            {error && (
+              <div className="p-3 bg-rose-500/10 border border-rose-500/20 rounded-xl">
+                <span className="text-rose-400 text-sm">⚠️ {error}</span>
+              </div>
+            )}
             <button type="submit" disabled={loading}
               className="w-full bg-gradient-to-r from-violet-600 to-blue-600 text-white py-3.5 rounded-xl font-bold text-sm hover:opacity-90 disabled:opacity-50 transition-all shadow-lg shadow-violet-900/50">
               {loading ? 'Creating account...' : 'Create Account →'}

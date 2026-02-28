@@ -13,12 +13,17 @@ export default function ToolPage() {
   const tool = TOOLS[toolId];
   const { markToolComplete, isToolComplete } = useComplianceScore();
 
-  useEffect(() => { if (!tool) router.push('/dashboard'); }, [tool, router]);
+  useEffect(() => { if (toolId && !tool) router.push('/dashboard'); }, [tool, toolId, router]);
   if (!tool) return null;
 
-  const agentColors: Record<string,string> = { legal:'from-violet-500 to-purple-600', security:'from-blue-500 to-cyan-600', product:'from-emerald-500 to-teal-600', sales:'from-orange-500 to-amber-600' };
-  const agentEmojis: Record<string,string> = { legal:'⚖️', security:'🛡️', product:'🎯', sales:'📊' };
-  const agentNames: Record<string,string> = { legal:'Legal Agent', security:'Security Agent', product:'Product Agent', sales:'Sales Agent' };
+  const agentColors: Record<string, string> = {
+    legal: 'from-violet-500 to-purple-600',
+    security: 'from-blue-500 to-cyan-600',
+    product: 'from-emerald-500 to-teal-600',
+    sales: 'from-orange-500 to-amber-600',
+  };
+  const agentEmojis: Record<string, string> = { legal: '⚖️', security: '🛡️', product: '🎯', sales: '📊' };
+  const agentNames: Record<string, string> = { legal: 'Legal Agent', security: 'Security Agent', product: 'Product Agent', sales: 'Sales Agent' };
 
   return (
     <div className="p-8 max-w-5xl mx-auto animate-fade-in">
@@ -27,16 +32,20 @@ export default function ToolPage() {
         <span>›</span>
         <span className="text-gray-700 font-semibold">{tool.name}</span>
       </div>
+
       <div className="flex items-start gap-5 mb-10">
         <div className={`w-16 h-16 bg-gradient-to-br ${tool.color} rounded-2xl flex items-center justify-center text-3xl shadow-lg flex-shrink-0`}>{tool.emoji}</div>
         <div className="flex-1">
           <div className="flex items-center gap-3 mb-1">
             <h1 className="text-2xl font-black text-gray-900">{tool.name}</h1>
-            {isToolComplete(toolId) && <span className="text-xs bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full font-bold">✅ Previously Generated</span>}
+            {isToolComplete(toolId) && (
+              <span className="text-xs bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full font-bold">✅ Previously Generated</span>
+            )}
           </div>
           <p className="text-gray-500">{tool.description}</p>
         </div>
       </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
           <div className="bg-white border border-gray-100 rounded-2xl p-8 shadow-sm">
@@ -49,7 +58,9 @@ export default function ToolPage() {
             <div className="space-y-3">
               {tool.agentChain.map((agentId, i) => (
                 <div key={agentId} className="flex items-center gap-3">
-                  <div className={`w-9 h-9 bg-gradient-to-br ${agentColors[agentId]} rounded-xl flex items-center justify-center text-base shadow-sm flex-shrink-0`}>{agentEmojis[agentId]}</div>
+                  <div className={`w-9 h-9 bg-gradient-to-br ${agentColors[agentId]} rounded-xl flex items-center justify-center text-base shadow-sm flex-shrink-0`}>
+                    {agentEmojis[agentId]}
+                  </div>
                   <div>
                     <p className="text-xs font-bold text-gray-700">{agentNames[agentId]}</p>
                     <p className="text-xs text-gray-400">Step {i + 1}</p>

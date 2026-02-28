@@ -26,6 +26,7 @@ const STATS = [
 export default function LandingPage() {
   return (
     <div className="min-h-screen bg-white overflow-hidden">
+      {/* NAV */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-xl border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
@@ -45,6 +46,7 @@ export default function LandingPage() {
         </div>
       </nav>
 
+      {/* HERO */}
       <section className="pt-32 pb-24 px-6 relative">
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute -top-40 -right-40 w-96 h-96 bg-violet-100 rounded-full blur-3xl opacity-60" />
@@ -82,6 +84,7 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* HOW IT WORKS */}
       <section className="py-24 bg-gray-950 text-white relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-violet-900/20 to-blue-900/20 pointer-events-none" />
         <div className="max-w-5xl mx-auto px-6 relative">
@@ -91,10 +94,10 @@ export default function LandingPage() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             {[
-              { step:'1', label:'You fill the form', desc:'Company details, infrastructure, data types', icon:'📝' },
-              { step:'2', label:'Agent 1 analyzes', desc:'Legal or Security agent drafts the foundation', icon:'🤖' },
-              { step:'3', label:'Agent 2 enhances', desc:'Receives full context from Agent 1, adds expertise', icon:'🔗' },
-              { step:'4', label:'Document delivered', desc:'Multi-expert output streamed in real-time', icon:'✅' },
+              { step: '1', label: 'You fill the form', desc: 'Company details, infrastructure, data types', icon: '📝' },
+              { step: '2', label: 'Agent 1 analyzes', desc: 'Legal or Security agent drafts the foundation', icon: '🤖' },
+              { step: '3', label: 'Agent 2 enhances', desc: 'Receives full context from Agent 1, adds expertise', icon: '🔗' },
+              { step: '4', label: 'Document delivered', desc: 'Multi-expert output streamed in real-time', icon: '✅' },
             ].map((s, i) => (
               <div key={i} className="flex flex-col items-center text-center">
                 <div className="w-14 h-14 bg-gradient-to-br from-violet-600 to-blue-600 rounded-2xl flex items-center justify-center text-2xl mb-4 shadow-lg shadow-violet-900/50">{s.icon}</div>
@@ -107,6 +110,7 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* AGENTS */}
       <section id="agents" className="py-24 px-6">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-16">
@@ -126,6 +130,7 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* TOOLS */}
       <section id="tools" className="py-24 bg-gradient-to-br from-violet-50 to-blue-50 px-6">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-16">
@@ -148,6 +153,7 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* CTA */}
       <section className="py-24 px-6 bg-gray-950 text-white text-center relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-violet-900/30 to-blue-900/30 pointer-events-none" />
         <div className="max-w-2xl mx-auto relative">
@@ -159,6 +165,7 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* FOOTER */}
       <footer className="bg-gray-950 border-t border-gray-800 py-8 px-6 text-center">
         <p className="text-gray-500 text-sm">⚠️ Documents are AI-generated for reference only. Always review with a qualified attorney before use.</p>
         <p className="text-gray-600 text-xs mt-2">© 2026 Compliance Copilot · Built with ❤️ on complete.dev multi-agent platform</p>

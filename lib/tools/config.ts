@@ -1,11 +1,22 @@
 export interface ToolField {
-  id: string; label: string; type: 'text' | 'textarea' | 'select';
-  placeholder?: string; required: boolean; options?: string[];
+  id: string;
+  label: string;
+  type: 'text' | 'textarea' | 'select';
+  placeholder?: string;
+  required: boolean;
+  options?: string[];
 }
+
 export interface Tool {
-  id: string; name: string; emoji: string; description: string;
-  agentChain: string[]; inputFields: ToolField[];
-  color: string; bgColor: string; borderColor: string;
+  id: string;
+  name: string;
+  emoji: string;
+  description: string;
+  agentChain: string[];
+  inputFields: ToolField[];
+  color: string;
+  bgColor: string;
+  borderColor: string;
 }
 
 export const TOOLS: Record<string, Tool> = {

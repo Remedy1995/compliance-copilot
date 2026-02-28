@@ -5,9 +5,13 @@ import { withAuth } from '@/lib/auth-middleware';
 import { checkRateLimit, rateLimitResponse, getRateLimitHeaders } from '@/lib/rate-limit';
 import { sanitizeToolInputs } from '@/lib/sanitize';
 
-export const runtime = 'edge';
+export const runtime = 'nodejs';
 
-export const POST = withAuth(async (req: Request, { params }: { params: { toolId: string } }, userId: string) => {
+export const POST = withAuth(async (
+  req: Request,
+  { params }: { params: { toolId: string } },
+  userId: string,
+) => {
   const rateLimit = checkRateLimit(userId, 'toolGeneration');
   if (!rateLimit.allowed) return rateLimitResponse(rateLimit);
 
@@ -22,16 +26,28 @@ export const POST = withAuth(async (req: Request, { params }: { params: { toolId
     }
   }
 
-  const inputs = sanitizeToolInputs(rawInputs);
+  let inputs: Record<string, string>;
+  try {
+    inputs = sanitizeToolInputs(rawInputs);
+  } catch (err: unknown) {
+    return new Response(JSON.stringify({ error: err instanceof Error ? err.message : 'Invalid input' }), { status: 400 });
+  }
+
   const encoder = new TextEncoder();
 
   const stream = new ReadableStream({
     async start(controller) {
       try {
         const agents: CompleteDevAgent[] = tool.agentChain.map(id => COMPLETE_DEV_AGENTS[id]);
-        const finalDocument = await runAgentChain(agents, inputs,
-          (agent) => controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'agent_start', agent: { id: agent.id, name: agent.name, emoji: agent.emoji } })}\n\n`)),
-          (result) => controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'agent_complete', agentId: result.agentId, agentName: result.agentName, emoji: result.emoji, output: result.output })}\n\n`))
+        const finalDocument = await runAgentChain(
+          agents,
+          inputs,
+          (agent) => controller.enqueue(encoder.encode(
+            `data: ${JSON.stringify({ type: 'agent_start', agent: { id: agent.id, name: agent.name, emoji: agent.emoji } })}\n\n`
+          )),
+          (result) => controller.enqueue(encoder.encode(
+            `data: ${JSON.stringify({ type: 'agent_complete', agentId: result.agentId, agentName: result.agentName, emoji: result.emoji, output: result.output })}\n\n`
+          )),
         );
         controller.enqueue(encoder.encode(`data: ${JSON.stringify({ type: 'complete', document: finalDocument })}\n\n`));
       } catch (error) {
@@ -44,6 +60,11 @@ export const POST = withAuth(async (req: Request, { params }: { params: { toolId
   });
 
   return new Response(stream, {
-    headers: { 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache', Connection: 'keep-alive', ...getRateLimitHeaders(rateLimit) },
+    headers: {
+      'Content-Type': 'text/event-stream',
+      'Cache-Control': 'no-cache',
+      'Connection': 'keep-alive',
+      ...getRateLimitHeaders(rateLimit),
+    },
   });
 });

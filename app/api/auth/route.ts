@@ -13,8 +13,12 @@ export async function POST(req: Request) {
     const rateLimit = checkRateLimit(`register:${ip}`, 'auth');
     if (!rateLimit.allowed) return rateLimitResponse(rateLimit);
     const { companyName, email, password } = body;
-    if (!companyName || !email || !password) return NextResponse.json({ error: 'All fields are required' }, { status: 400 });
-    if (!PASSWORD_REGEX.test(password)) return NextResponse.json({ error: 'Password must be 12+ chars with uppercase, lowercase, number, and symbol' }, { status: 400 });
+    if (!companyName || !email || !password) {
+      return NextResponse.json({ error: 'All fields are required' }, { status: 400 });
+    }
+    if (!PASSWORD_REGEX.test(password)) {
+      return NextResponse.json({ error: 'Password must be 12+ chars with uppercase, lowercase, number, and symbol' }, { status: 400 });
+    }
     console.log('Register:', sanitizeInput(companyName, 100), sanitizeInput(email, 254));
     return NextResponse.json({ success: true, message: 'Account created' }, { status: 201 });
   }
@@ -23,7 +27,10 @@ export async function POST(req: Request) {
     const rateLimit = checkRateLimit(`login:${ip}`, 'auth');
     if (!rateLimit.allowed) return rateLimitResponse(rateLimit);
     const { email, password } = body;
-    if (!email || !password) return NextResponse.json({ error: 'Email and password are required' }, { status: 400 });
+    if (!email || !password) {
+      return NextResponse.json({ error: 'Email and password are required' }, { status: 400 });
+    }
+    // Demo: return a token (replace with real JWT signing in production)
     return NextResponse.json({ success: true, token: 'demo-token-replace-with-real-jwt' }, { status: 200 });
   }
 
