@@ -21,7 +21,6 @@ export default function DashboardPage() {
         <h1 className="text-3xl font-black text-gray-900 mb-1">Compliance Dashboard</h1>
         <p className="text-gray-500">Generate all 5 documents to reach 100% compliance readiness</p>
       </div>
-
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-10">
         <div className={`bg-gradient-to-br ${scoreGradient} rounded-2xl p-6 text-white shadow-lg`}>
           <p className="text-white/70 text-sm font-semibold mb-1">Compliance Score</p>
@@ -43,7 +42,6 @@ export default function DashboardPage() {
           </div>
         </div>
       </div>
-
       <div className="bg-white border border-gray-100 rounded-2xl p-6 mb-10 shadow-sm">
         <div className="flex items-center justify-between mb-3">
           <span className="text-sm font-bold text-gray-700">Overall Compliance Progress</span>
@@ -53,7 +51,6 @@ export default function DashboardPage() {
           <div className={`h-3 rounded-full bg-gradient-to-r ${scoreGradient} transition-all duration-1000 ease-out`} style={{ width: `${score}%` }} />
         </div>
       </div>
-
       <h2 className="text-xl font-black text-gray-900 mb-5">Compliance Tools</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
         {TOOLS.map(tool => {

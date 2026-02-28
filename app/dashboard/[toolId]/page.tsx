@@ -27,7 +27,6 @@ export default function ToolPage() {
         <span>›</span>
         <span className="text-gray-700 font-semibold">{tool.name}</span>
       </div>
-
       <div className="flex items-start gap-5 mb-10">
         <div className={`w-16 h-16 bg-gradient-to-br ${tool.color} rounded-2xl flex items-center justify-center text-3xl shadow-lg flex-shrink-0`}>{tool.emoji}</div>
         <div className="flex-1">
@@ -38,7 +37,6 @@ export default function ToolPage() {
           <p className="text-gray-500">{tool.description}</p>
         </div>
       </div>
-
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
           <div className="bg-white border border-gray-100 rounded-2xl p-8 shadow-sm">
