@@ -3,47 +3,75 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 
 const NAV_ITEMS = [
-  { href: '/dashboard', label: 'Overview', emoji: '🏠' },
-  { href: '/dashboard/privacy-policy', label: 'Privacy Policy', emoji: '📜' },
-  { href: '/dashboard/soc2-checklist', label: 'SOC2 Checklist', emoji: '✅' },
-  { href: '/dashboard/gdpr-docs', label: 'GDPR Suite', emoji: '🇪🇺' },
-  { href: '/dashboard/security-arch', label: 'Security Arch', emoji: '🏗️' },
-  { href: '/dashboard/vendor-risk', label: 'Vendor Risk', emoji: '📋' },
+  { href: '/dashboard', label: 'Overview', emoji: '🏠', exact: true },
+  { href: '/dashboard/privacy-policy', label: 'Privacy Policy', emoji: '📜', exact: false },
+  { href: '/dashboard/soc2-checklist', label: 'SOC2 Checklist', emoji: '✅', exact: false },
+  { href: '/dashboard/gdpr-docs', label: 'GDPR Suite', emoji: '🇪🇺', exact: false },
+  { href: '/dashboard/security-arch', label: 'Security Arch', emoji: '🏗️', exact: false },
+  { href: '/dashboard/vendor-risk', label: 'Vendor Risk', emoji: '📋', exact: false },
 ];
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
-  const logout = () => { localStorage.removeItem('auth_token'); router.push('/login'); };
+
+  const logout = () => {
+    localStorage.removeItem('auth_token');
+    router.push('/login');
+  };
+
+  const isActive = (item: typeof NAV_ITEMS[0]) =>
+    item.exact ? pathname === item.href : pathname === item.href;
 
   return (
     <div className="min-h-screen flex bg-gray-50">
+      {/* Sidebar */}
       <aside className="w-64 sidebar-gradient flex flex-col fixed h-full z-40 shadow-2xl">
+        {/* Logo */}
         <div className="p-6 border-b border-white/10">
-          <Link href="/" className="flex items-center gap-2.5">
-            <div className="w-8 h-8 bg-gradient-to-br from-violet-400 to-blue-400 rounded-lg flex items-center justify-center text-sm">🛡️</div>
-            <span className="font-bold text-white text-base">Compliance Copilot</span>
+          <Link href="/" className="flex items-center gap-3 group">
+            <div className="w-9 h-9 bg-gradient-to-br from-violet-400 to-blue-400 rounded-xl flex items-center justify-center text-base shadow-lg group-hover:scale-110 transition-transform">🛡️</div>
+            <div>
+              <p className="font-black text-white text-sm leading-tight">Compliance</p>
+              <p className="font-black text-white text-sm leading-tight">Copilot</p>
+            </div>
           </Link>
         </div>
+
+        {/* Nav */}
         <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
+          <p className="text-xs font-bold text-white/30 uppercase tracking-widest px-3 mb-3">Tools</p>
           {NAV_ITEMS.map(item => {
-            const isActive = pathname === item.href;
+            const active = isActive(item);
             return (
               <Link key={item.href} href={item.href}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${isActive ? 'bg-white/15 text-white shadow-sm' : 'text-gray-400 hover:text-white hover:bg-white/10'}`}>
-                <span className="text-base">{item.emoji}</span>
-                <span>{item.label}</span>
-                {isActive && <span className="ml-auto w-1.5 h-1.5 bg-violet-400 rounded-full"></span>}
+                className={`flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-semibold transition-all group ${
+                  active
+                    ? 'bg-white/15 text-white shadow-sm border border-white/10'
+                    : 'text-gray-400 hover:text-white hover:bg-white/10'
+                }`}>
+                <span className={`text-base transition-transform ${active ? '' : 'group-hover:scale-110'}`}>{item.emoji}</span>
+                <span className="flex-1">{item.label}</span>
+                {active && <span className="w-1.5 h-1.5 bg-violet-400 rounded-full animate-pulse"></span>}
               </Link>
             );
           })}
         </nav>
-        <div className="p-4 border-t border-white/10">
-          <button onClick={logout} className="w-full flex items-center gap-2 px-3 py-2 text-gray-400 hover:text-white text-sm rounded-xl hover:bg-white/10 transition-all">
+
+        {/* Footer */}
+        <div className="p-4 border-t border-white/10 space-y-2">
+          <div className="px-3 py-2 bg-white/5 rounded-xl border border-white/10">
+            <p className="text-xs font-bold text-violet-300 mb-0.5">🤖 Powered by</p>
+            <p className="text-xs text-gray-400">complete.dev · 4 agents</p>
+          </div>
+          <button onClick={logout}
+            className="w-full flex items-center gap-2 px-3 py-2.5 text-gray-400 hover:text-white text-sm rounded-xl hover:bg-white/10 transition-all font-medium">
             <span>🚪</span> Sign Out
           </button>
         </div>
       </aside>
+
+      {/* Main */}
       <main className="flex-1 ml-64 min-h-screen">{children}</main>
     </div>
   );

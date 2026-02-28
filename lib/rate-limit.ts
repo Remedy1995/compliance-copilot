@@ -20,7 +20,12 @@ export function checkRateLimit(identifier: string, type: string = 'general'): Ra
   entry.count++;
   const remaining = Math.max(0, config.max - entry.count);
   const allowed = entry.count <= config.max;
-  return { allowed, remaining, resetAt: entry.resetAt, retryAfter: allowed ? 0 : Math.ceil((entry.resetAt - now) / 1000) };
+  return {
+    allowed,
+    remaining,
+    resetAt: entry.resetAt,
+    retryAfter: allowed ? 0 : Math.ceil((entry.resetAt - now) / 1000),
+  };
 }
 
 export function rateLimitResponse(result: RateLimitResult): Response {

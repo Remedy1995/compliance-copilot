@@ -21,10 +21,14 @@ export interface Tool {
 
 export const TOOLS: Record<string, Tool> = {
   'privacy-policy': {
-    id: 'privacy-policy', name: 'Privacy Policy Generator', emoji: '📜',
+    id: 'privacy-policy',
+    name: 'Privacy Policy Generator',
+    emoji: '📜',
     description: 'Generate a GDPR & CCPA compliant privacy policy for your startup.',
     agentChain: ['legal', 'product'],
-    color: 'from-violet-500 to-purple-600', bgColor: 'bg-violet-50', borderColor: 'border-violet-200',
+    color: 'from-violet-500 to-purple-600',
+    bgColor: 'bg-violet-50',
+    borderColor: 'border-violet-200',
     inputFields: [
       { id: 'companyName', label: 'Company Name', type: 'text', placeholder: 'TechCorp Inc.', required: true },
       { id: 'website', label: 'Website URL', type: 'text', placeholder: 'https://techcorp.io', required: true },
@@ -33,10 +37,14 @@ export const TOOLS: Record<string, Tool> = {
     ],
   },
   'soc2-checklist': {
-    id: 'soc2-checklist', name: 'SOC2 Readiness Checklist', emoji: '✅',
+    id: 'soc2-checklist',
+    name: 'SOC2 Readiness Checklist',
+    emoji: '✅',
     description: 'Get a prioritized SOC2 gap analysis and action plan.',
     agentChain: ['security', 'product'],
-    color: 'from-emerald-500 to-teal-600', bgColor: 'bg-emerald-50', borderColor: 'border-emerald-200',
+    color: 'from-emerald-500 to-teal-600',
+    bgColor: 'bg-emerald-50',
+    borderColor: 'border-emerald-200',
     inputFields: [
       { id: 'companyName', label: 'Company Name', type: 'text', placeholder: 'TechCorp Inc.', required: true },
       { id: 'infrastructure', label: 'Cloud Infrastructure', type: 'text', placeholder: 'AWS, GCP, Azure...', required: true },
@@ -45,10 +53,14 @@ export const TOOLS: Record<string, Tool> = {
     ],
   },
   'gdpr-docs': {
-    id: 'gdpr-docs', name: 'GDPR Documentation Suite', emoji: '🇪🇺',
+    id: 'gdpr-docs',
+    name: 'GDPR Documentation Suite',
+    emoji: '🇪🇺',
     description: 'Full GDPR documentation including DPA and DPIA templates.',
     agentChain: ['legal', 'security', 'product'],
-    color: 'from-blue-500 to-cyan-600', bgColor: 'bg-blue-50', borderColor: 'border-blue-200',
+    color: 'from-blue-500 to-cyan-600',
+    bgColor: 'bg-blue-50',
+    borderColor: 'border-blue-200',
     inputFields: [
       { id: 'companyName', label: 'Company Name', type: 'text', placeholder: 'TechCorp Inc.', required: true },
       { id: 'euUsers', label: 'Do you have EU users?', type: 'select', options: ['Yes', 'No', 'Planning to'], required: true },
@@ -57,10 +69,14 @@ export const TOOLS: Record<string, Tool> = {
     ],
   },
   'security-arch': {
-    id: 'security-arch', name: 'Security Architecture Report', emoji: '🏗️',
+    id: 'security-arch',
+    name: 'Security Architecture Report',
+    emoji: '🏗️',
     description: 'Enterprise-ready security architecture documentation.',
     agentChain: ['security', 'sales'],
-    color: 'from-orange-500 to-amber-600', bgColor: 'bg-orange-50', borderColor: 'border-orange-200',
+    color: 'from-orange-500 to-amber-600',
+    bgColor: 'bg-orange-50',
+    borderColor: 'border-orange-200',
     inputFields: [
       { id: 'companyName', label: 'Company Name', type: 'text', placeholder: 'TechCorp Inc.', required: true },
       { id: 'infrastructure', label: 'Infrastructure Stack', type: 'textarea', placeholder: 'AWS ECS, RDS PostgreSQL, CloudFront...', required: true },
@@ -69,10 +85,14 @@ export const TOOLS: Record<string, Tool> = {
     ],
   },
   'vendor-risk': {
-    id: 'vendor-risk', name: 'Vendor Risk Questionnaire', emoji: '📋',
+    id: 'vendor-risk',
+    name: 'Vendor Risk Questionnaire',
+    emoji: '📋',
     description: 'Complete enterprise vendor security assessments automatically.',
     agentChain: ['security', 'sales', 'legal'],
-    color: 'from-rose-500 to-pink-600', bgColor: 'bg-rose-50', borderColor: 'border-rose-200',
+    color: 'from-rose-500 to-pink-600',
+    bgColor: 'bg-rose-50',
+    borderColor: 'border-rose-200',
     inputFields: [
       { id: 'companyName', label: 'Company Name', type: 'text', placeholder: 'TechCorp Inc.', required: true },
       { id: 'productDescription', label: 'Product Description', type: 'textarea', placeholder: 'B2B SaaS platform for...', required: true },

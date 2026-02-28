@@ -3,7 +3,8 @@ import './globals.css';
 
 export const metadata: Metadata = {
   title: 'Compliance Copilot — AI-Powered Compliance for Startups',
-  description: 'Generate enterprise-grade compliance documents in minutes using 4 specialized AI agents.',
+  description: 'Generate enterprise-grade compliance documents in minutes using 4 specialized AI agents. Built on complete.dev.',
+  keywords: 'compliance, GDPR, SOC2, privacy policy, AI agents, startup compliance',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
