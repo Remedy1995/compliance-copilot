@@ -19,8 +19,14 @@ export default function ToolForm({ tool, onComplete }: Props) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true); setError(''); setDocument(''); setAgentStatus([]);
+    const token = typeof window !== 'undefined' ? localStorage.getItem('auth_token') : null;
+    if (!token) {
+      setError('Session expired. Please sign in again.');
+      setLoading(false);
+      window.location.href = '/login';
+      return;
+    }
     try {
-      const token = localStorage.getItem('auth_token') ?? '';
       const res = await fetch(`/api/tools/${tool.id}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
@@ -28,6 +34,12 @@ export default function ToolForm({ tool, onComplete }: Props) {
       });
       if (!res.ok || !res.body) {
         const err = await res.json().catch(() => ({ error: 'Request failed' }));
+        if (res.status === 401) {
+          localStorage.removeItem('auth_token');
+          localStorage.removeItem('company_name');
+          window.location.href = '/login?expired=1';
+          return;
+        }
         throw new Error(err.error ?? 'Request failed');
       }
       const reader = res.body.getReader();

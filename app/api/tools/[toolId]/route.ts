@@ -9,13 +9,13 @@ export const runtime = 'nodejs';
 
 export const POST = withAuth(async (
   req: Request,
-  { params }: { params: { toolId: string } },
+  ctx: { params: Record<string, string> },
   userId: string,
 ) => {
   const rateLimit = checkRateLimit(userId, 'toolGeneration');
   if (!rateLimit.allowed) return rateLimitResponse(rateLimit);
 
-  const { toolId } = params;
+  const toolId = ctx.params?.toolId ?? '';
   const tool = TOOLS[toolId];
   if (!tool) return new Response(JSON.stringify({ error: 'Tool not found' }), { status: 404 });
 
